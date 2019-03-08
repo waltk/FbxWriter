@@ -14,7 +14,7 @@ namespace Fbx
 		/// <param name="position"></param>
 		/// <param name="message"></param>
 		public FbxException(long position, string message) :
-			base($"{message}, near offset {position}")
+			base(message + ", near offset " + position)
 		{
 		}
 
@@ -25,7 +25,7 @@ namespace Fbx
 		/// <param name="column"></param>
 		/// <param name="message"></param>
 		public FbxException(int line, int column, string message) :
-			base($"{message}, near line {line} column {column}")
+			base(message + ", near line " + line + " column " + column)
 		{
 		}
 
@@ -36,7 +36,7 @@ namespace Fbx
 		/// <param name="propertyID"></param>
 		/// <param name="message"></param>
 		public FbxException(Stack<string> nodePath, int propertyID, string message) :
-			base(message + ", at " + string.Join("/", nodePath.ToArray()) + (propertyID < 0 ? "" : $"[{propertyID}]"))
+			base(message + ", at " + string.Join("/", nodePath.ToArray()) + (propertyID < 0 ? "" : "[" + propertyID + "]"))
 		{
 		}
 	}

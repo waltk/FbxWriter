@@ -71,7 +71,7 @@ namespace Fbx
 		/// </summary>
 		/// <param name="stream"></param>
 		/// <returns><c>true</c> if it's compliant</returns>
-		protected static bool ReadHeader(Stream stream)
+		public static bool ReadHeader(Stream stream)
 		{
 			var buf = new byte[headerString.Length];
 			stream.Read(buf, 0, buf.Length);
@@ -150,22 +150,22 @@ namespace Fbx
 			int hour, int minute, int second, int millisecond)
 		{
 			if(year < 0 || year > 9999)
-				throw new ArgumentOutOfRangeException(nameof(year));
+				throw new ArgumentOutOfRangeException(year.ToString());
 			if(month < 0 || month > 12)
-				throw new ArgumentOutOfRangeException(nameof(month));
+				throw new ArgumentOutOfRangeException(month.ToString());
 			if(day < 0 || day > 31)
-				throw new ArgumentOutOfRangeException(nameof(day));
+				throw new ArgumentOutOfRangeException(day.ToString());
 			if(hour < 0 || hour >= 24)
-				throw new ArgumentOutOfRangeException(nameof(hour));
+				throw new ArgumentOutOfRangeException(hour.ToString());
 			if(minute < 0 || minute >= 60)
-				throw new ArgumentOutOfRangeException(nameof(minute));
+				throw new ArgumentOutOfRangeException(minute.ToString());
 			if(second < 0 || second >= 60)
-				throw new ArgumentOutOfRangeException(nameof(second));
+				throw new ArgumentOutOfRangeException(second.ToString());
 			if(millisecond < 0 || millisecond >= 1000)
-				throw new ArgumentOutOfRangeException(nameof(millisecond));
+				throw new ArgumentOutOfRangeException(millisecond.ToString());
 
 			var str = (byte[]) sourceId.Clone();
-			var mangledTime = $"{second:00}{month:00}{hour:00}{day:00}{(millisecond/10):00}{year:0000}{minute:00}";
+			var mangledTime = second + ":00" + month + ":00" + hour + ":00" + day + ":00" + millisecond/10 + ":00" + year + ":0000" + minute + ":00";
 			var mangledBytes = Encoding.ASCII.GetBytes(mangledTime);
 			Encrypt(str, mangledBytes);
 			Encrypt(str, key);

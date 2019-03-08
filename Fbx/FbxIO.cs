@@ -10,15 +10,15 @@ namespace Fbx
 	// ReSharper disable once InconsistentNaming
 	public static class FbxIO
 	{
-		/// <summary>
-		/// Reads a binary FBX file
-		/// </summary>
-		/// <param name="path"></param>
-		/// <returns>The top level document node</returns>
-		public static FbxDocument ReadBinary(string path)
+        /// <summary>
+        /// Reads a binary FBX file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns>The top level document node</returns>
+        public static FbxDocument ReadBinary(string path)
 		{
 			if(path == null)
-				throw new ArgumentNullException(nameof(path));
+				throw new ArgumentNullException(path);
 			using (var stream = new FileStream(path, FileMode.Open))
 			{
 				var reader = new FbxBinaryReader(stream);
@@ -34,11 +34,11 @@ namespace Fbx
 		public static FbxDocument ReadAscii(string path)
 		{
 			if (path == null)
-				throw new ArgumentNullException(nameof(path));
+				throw new ArgumentNullException(path);
 			using (var stream = new FileStream(path, FileMode.Open))
 			{
 				var reader = new FbxAsciiReader(stream);
-				return reader.Read();
+                return reader.Read();
 			}
 		}
 
@@ -50,7 +50,7 @@ namespace Fbx
 		public static void WriteBinary(FbxDocument document, string path)
 		{
 			if (path == null)
-				throw new ArgumentNullException(nameof(path));
+				throw new ArgumentNullException(path);
 			using (var stream = new FileStream(path, FileMode.Create))
 			{
 				var writer = new FbxBinaryWriter(stream);
@@ -66,7 +66,7 @@ namespace Fbx
 		public static void WriteAscii(FbxDocument document, string path)
 		{
 			if (path == null)
-				throw new ArgumentNullException(nameof(path));
+				throw new ArgumentNullException(path);
 			using (var stream = new FileStream(path, FileMode.Create))
 			{
 				var writer = new FbxAsciiWriter(stream);

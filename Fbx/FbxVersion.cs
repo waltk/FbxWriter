@@ -41,5 +41,10 @@ namespace Fbx
 		/// FBX 2014 version
 		/// </summary>
 		v7_4 = 7400,
-	}
+
+        /// <summary>
+        /// FBX 2014 version
+        /// </summary>
+        v7_5 = 7500,
+    }
 }

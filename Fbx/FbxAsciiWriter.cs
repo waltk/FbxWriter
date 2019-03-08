@@ -19,7 +19,7 @@ namespace Fbx
 		public FbxAsciiWriter(Stream stream)
 		{
 			if (stream == null)
-				throw new ArgumentNullException(nameof(stream));
+				throw new ArgumentNullException(stream.ToString());
 			this.stream = stream;
 		}
 
@@ -30,7 +30,17 @@ namespace Fbx
 		/// Lines might end up being a few characters longer than this, visibly and otherwise,
 		/// so don't rely on it as a hard limit in code!
 		/// </remarks>
-		public int MaxLineLength { get; set; } = 260;
+		public int MaxLineLength
+        {
+            get
+            {
+                return 260;
+            }
+            set
+            {
+                MaxLineLength = 260;
+            }
+        }
 
 		readonly Stack<string> nodePath = new Stack<string>();
 
@@ -134,14 +144,14 @@ namespace Fbx
 		public void Write(FbxDocument document)
 		{
 			if(document == null)
-				throw new ArgumentNullException(nameof(document));
+				throw new ArgumentNullException(document.ToString());
 			var sb = new StringBuilder();
 
 			// Write version header (a comment, but required for many importers)
 			var vMajor = (int)document.Version/1000;
 			var vMinor = ((int) document.Version%1000)/100;
 			var vRev = ((int) document.Version%100)/10;
-			sb.Append($"; FBX {vMajor}.{vMinor}.{vRev} project file\n\n");
+			sb.Append("; FBX " + vMajor + "." + vMinor + "." + vRev + " project file\\n\\n");
 
 			nodePath.Clear();
 			foreach (var n in document.Nodes)
@@ -152,7 +162,8 @@ namespace Fbx
 				sb.Append('\n');
 			}
 			var b = Encoding.ASCII.GetBytes(sb.ToString());
+            Console.Write(sb.ToString());
 			stream.Write(b, 0, b.Length);
 		}
-	}
+    }
 }

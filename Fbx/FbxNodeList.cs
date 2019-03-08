@@ -5,16 +5,16 @@ namespace Fbx
 	/// <summary>
 	/// Base class for nodes and documents
 	/// </summary>
-	public abstract class FbxNodeList
+	public class FbxNodeList
 	{
-		/// <summary>
-		/// The list of child/nested nodes
-		/// </summary>
-		/// <remarks>
-		/// A list with one or more null elements is treated differently than an empty list,
-		/// and represented differently in all FBX output files.
-		/// </remarks>
-		public List<FbxNode> Nodes { get; } = new List<FbxNode>();
+        /// <summary>
+        /// The list of child/nested nodes
+        /// </summary>
+        /// <remarks>
+        /// A list with one or more null elements is treated differently than an empty list,
+        /// and represented differently in all FBX output files.
+        /// </remarks>
+        public List<FbxNode> Nodes = new List<FbxNode>();
 
 		/// <summary>
 		/// Gets a named child node

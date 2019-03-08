@@ -21,16 +21,28 @@ namespace Fbx
 		/// <summary>
 		/// The minimum size of an array in bytes before it is compressed
 		/// </summary>
-		public int CompressionThreshold { get; set; } = 1024;
+        public int CompressionThreshold 
+        {
+            get
+            {
+                return 1024;
+            }
+            set
+            {
+                CompressionThreshold = value;
+            }
+        }
 
-		/// <summary>
-		/// Creates a new writer
-		/// </summary>
-		/// <param name="stream"></param>
-		public FbxBinaryWriter(Stream stream)
+
+
+        /// <summary>
+        /// Creates a new writer
+        /// </summary>
+        /// <param name="stream"></param>
+        public FbxBinaryWriter(Stream stream)
 		{
 			if(stream == null)
-				throw new ArgumentNullException(nameof(stream));
+				throw new ArgumentNullException(stream.ToString());
 			output = stream;
 			// Wrap in a memory stream to guarantee seeking
 			memory = new MemoryStream();
@@ -151,9 +163,10 @@ namespace Fbx
 			if (obj == null)
 				return;
 			WriterInfo writerInfo;
-			if(!writePropertyActions.TryGetValue(obj.GetType(), out writerInfo))
-				throw new FbxException(nodePath, id,
-					"Invalid property type " + obj.GetType());
+            if (!writePropertyActions.TryGetValue(obj.GetType(), out writerInfo))
+                Console.WriteLine("Invalid property type " + obj.GetType());
+                //throw new FbxException(nodePath, id,
+				//	"Invalid property type " + obj.GetType());
 			stream.Write((byte)writerInfo.id);
 			// ReSharper disable once AssignNullToNotNullAttribute
 			if (writerInfo.writer == null) // Array type
@@ -187,7 +200,8 @@ namespace Fbx
 				stream.Write(node.Properties.Count);
 				var propertyLengthPos = stream.BaseStream.Position;
 				stream.Write(0); // Property length placeholder
-				stream.Write((byte)(name?.Length ?? 0));
+                int nameLength = name == null ? 0 : name.Length;
+                stream.Write((byte)(nameLength));
 				if(name != null)
 					stream.Write(name);
 

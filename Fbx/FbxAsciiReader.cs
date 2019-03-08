@@ -24,7 +24,7 @@ namespace Fbx
 		public FbxAsciiReader(Stream stream, ErrorLevel errorLevel = ErrorLevel.Checked)
 		{
 			if(stream == null)
-				throw new ArgumentNullException(nameof(stream));
+				throw new ArgumentNullException(stream.ToString());
 			this.stream = stream;
 			this.errorLevel = errorLevel;
 		}
@@ -37,12 +37,24 @@ namespace Fbx
 		/// Malformed files could cause large amounts of memory to be allocated
 		/// and slow or crash the system as a result.
 		/// </remarks>
-		public int MaxArrayLength { get; set; } = (1 << 24);
+        public int MaxArrayLength
+        {
+            get
+            {
+                return (1 << 24);
+            }
+            set
+            {
+                MaxArrayLength = value;
+            }
 
-		// We read bytes a lot, so we should make a more efficient method here
-		// (The normal one makes a new byte array each time)
 
-		readonly byte[] singleChar = new byte[1];
+        }
+
+        // We read bytes a lot, so we should make a more efficient method here
+        // (The normal one makes a new byte array each time)
+
+        readonly byte[] singleChar = new byte[1];
 		private char? prevChar;
 		private bool endStream;
 		private bool wasCr;
@@ -132,8 +144,9 @@ namespace Fbx
 
 			public override int GetHashCode()
 			{
-				return String?.GetHashCode() ?? 0;
-			}
+                return String == null ? 0 : GetHashCode();
+                //return String?.GetHashCode() ?? 0;
+            }
 
 			public Identifier(string str)
 			{
@@ -515,12 +528,14 @@ namespace Fbx
 				} while (!IsLineEnd(c = ReadChar()) && !endStream);
 				var match = Regex.Match(sb.ToString(), versionString);
 				hasVersionString = match.Success;
+                /*
 				if(hasVersionString)
 					ret.Version = (FbxVersion)(
 						int.Parse(match.Groups[1].Value)*1000 +
 						int.Parse(match.Groups[2].Value)*100 +
 						int.Parse(match.Groups[3].Value)*10
 					);
+                */
 			}
 			if(!hasVersionString && errorLevel >= ErrorLevel.Strict)
 				throw new FbxException(line, column,
