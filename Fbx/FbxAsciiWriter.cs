@@ -52,7 +52,7 @@ namespace Fbx
 			// Write identifier
 			for (int i = 0; i < indentLevel; i++)
 				sb.Append('\t');
-			sb.Append(node.Name).Append(':');
+			sb.Append(node.Name).Append(": ");
 
 			// Write properties
 			var first = true;
@@ -62,15 +62,19 @@ namespace Fbx
 				if(p == null)
 					continue;
 				if (!first)
-					sb.Append(',');
-				sb.Append(' ');
-				if (p is string)
+					sb.Append(",");
+                if (p is string)
 				{
-					sb.Append('"').Append(p).Append('"');
-				} else if (p is Array)
+                    if (!first)
+                        sb.Append(" ");
+                    sb.Append('"').Append(p).Append('"');
+                }
+                else if (p is Array)
 				{
 					var array = (Array) p;
 					var elementType = p.GetType().GetElementType();
+                    if (array.Length > 0)
+                        writeArrayLength = true;
 					// ReSharper disable once PossibleNullReferenceException
 					// We know it's an array, so we don't need to check for null
 					if (array.Rank != 1 || !elementType.IsPrimitive)
@@ -78,10 +82,10 @@ namespace Fbx
 							"Invalid array type " + p.GetType());
 					if (writeArrayLength)
 					{
-						sb.Append('*').Append(array.Length).Append(" {\n");
+						sb.Append("*").Append(array.Length).Append(" {\n");
 						lineStart = sb.Length;
 						for (int i = -1; i < indentLevel; i++)
-							sb.Append('\t');
+							sb.Append("\t");
 						sb.Append("a: ");
 					}
 					bool pFirst = true;
@@ -102,8 +106,8 @@ namespace Fbx
 					{
 						sb.Append('\n');
 						for (int i = 0; i < indentLevel; i++)
-							sb.Append('\t');
-						sb.Append('}');
+							sb.Append("\t");
+						sb.Append("}");
 					}
 				} else if (p is char)
 					sb.Append((char) p);
@@ -126,10 +130,10 @@ namespace Fbx
 					BuildString(n, sb, writeArrayLength, indentLevel + 1);
 				}
 				for (int i = 0; i < indentLevel; i++)
-					sb.Append('\t');
-				sb.Append('}');
+					sb.Append("\t");
+				sb.Append("}");
 			}
-			sb.Append('\n');
+			sb.Append("\n");
 
 			nodePath.Pop();
 		}
@@ -151,7 +155,8 @@ namespace Fbx
 			var vMajor = (int)document.Version/1000;
 			var vMinor = ((int) document.Version%1000)/100;
 			var vRev = ((int) document.Version%100)/10;
-			sb.Append("; FBX " + vMajor + "." + vMinor + "." + vRev + " project file\\n\\n");
+			sb.Append("; FBX " + vMajor + "." + vMinor + "." + vRev + " project file\n");
+            sb.Append("; ----------------------------------------------------\n");
 
 			nodePath.Clear();
 			foreach (var n in document.Nodes)

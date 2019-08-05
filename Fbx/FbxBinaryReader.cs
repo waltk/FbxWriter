@@ -14,6 +14,8 @@ namespace Fbx
         public readonly BinaryReader binStream;
         public readonly ErrorLevel errorLevel;
         public delegate object ReadPrimitive(BinaryReader reader);
+        public int versionNumber;
+
 
         /// <summary>
         /// Creates a new reader
@@ -36,9 +38,7 @@ namespace Fbx
         // Reads a single property
         public object ReadProperty()
         {
-
             var dataType = (char)binStream.ReadByte();
-            //Debug.Log(dataType);
             switch (dataType)
             {
                 case 'Y':
@@ -168,9 +168,30 @@ namespace Fbx
         /// for the reader's error level</exception>
         public FbxNode ReadNode()
         {
-            var endOffset = binStream.ReadInt32();
-            var numProperties = binStream.ReadInt32();
-            var propertyListLen = binStream.ReadInt32();
+            long endOffset;
+            int endOffset32;
+            long numProperties;
+            int numProperties32;
+            long propertyListLen;
+            int propertyListLen32;
+
+            // Version 7500 reads qwords instead dwords for properties and property list length
+            if (versionNumber == 7500)
+            {
+                endOffset = binStream.ReadInt64();
+                numProperties = binStream.ReadInt64();
+                propertyListLen = binStream.ReadInt64();
+            }
+            else
+            {
+                endOffset32 = binStream.ReadInt32();
+                endOffset = Convert.ToInt64(endOffset32);
+                numProperties32 = binStream.ReadInt32();
+                numProperties = Convert.ToInt64(numProperties32);
+                propertyListLen32 = binStream.ReadInt32();
+                propertyListLen = Convert.ToInt64(propertyListLen32);
+            }
+
             var nameLen = binStream.ReadByte();
             var name = nameLen == 0 ? "" : Encoding.ASCII.GetString(binStream.ReadBytes(nameLen));
 
@@ -223,11 +244,11 @@ namespace Fbx
             if (errorLevel >= ErrorLevel.Strict && !validHeader)
                 throw new FbxException(binStream.BaseStream.Position,
                     "Invalid header string");
+                    
+            versionNumber = binStream.ReadInt32();
+            var document = new FbxDocument { Version = (FbxVersion)versionNumber };
 
-            var document = new FbxDocument();// {Version = (FbxVersion) stream.ReadInt32()};
-            var fbxVer = binStream.ReadInt32();
             // Read nodes
-            var dataPos = binStream.BaseStream.Position;
             FbxNode nested;
             do
             {
@@ -248,10 +269,9 @@ namespace Fbx
             }
 
             // Read footer extension
-            dataPos = binStream.BaseStream.Position;
             var validFooterExtension = CheckFooter(binStream, document.Version);
             if (errorLevel >= ErrorLevel.Strict && !validFooterExtension)
-                throw new FbxException(dataPos, "Invalid footer");
+                throw new FbxException(binStream.BaseStream.Position, "Invalid footer");
             return document;
         }
     }

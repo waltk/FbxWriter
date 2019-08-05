@@ -13,12 +13,6 @@
         /// it won't change any of the document's data which can be version-specific.
         /// Most FBX importers can cope with any version.
         /// </remarks>
-        public FbxVersion Version
-        {
-            get
-            {
-                return FbxVersion.v7_5;
-            }
-        }
+        public FbxVersion Version { get; set; }
     }
 }

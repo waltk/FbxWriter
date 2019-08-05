@@ -23,27 +23,27 @@ namespace Fbx
 		v7_0 = 7000,
 
 		/// <summary>
-		/// FBX 2011 version
+		/// FBX version 7.1
 		/// </summary>
 		v7_1 = 7100,
 
 		/// <summary>
-		/// FBX 2012 version
+		/// FBX version 7.2
 		/// </summary>
 		v7_2 = 7200,
 
 		/// <summary>
-		/// FBX 2013 version
+		/// FBX version 7.3
 		/// </summary>
 		v7_3 = 7300,
 
 		/// <summary>
-		/// FBX 2014 version
+		/// FBX version 7.4
 		/// </summary>
 		v7_4 = 7400,
 
         /// <summary>
-        /// FBX 2014 version
+        /// FBX version 7.5
         /// </summary>
         v7_5 = 7500,
     }
